@@ -1,87 +1,99 @@
 import { setErrorMessage, validator } from './validator';
 
-// TODO: Add specs
 describe('fonk-previous-date-validator specs', () => {
   describe('Date option boundaries', () => {
+    it('should return succeeded validation when value is a valid Date object earlier than actual Date', () => {
+      const value = new Date(2018, 11, 24, 10, 33, 30, 0);
+
+      const result = validator({ value });
+
+      expect(result).toEqual({
+        succeeded: true,
+        message: '',
+        type: 'PREVIOUS_DATE',
+      });
+    });
+
+    it('should return succeeded validation when value is a valid Date object earlier than customArgs date param', () => {
+      const value = new Date(2018, 11, 24, 10, 33, 30, 0);
+      const date = new Date(2018, 12, 30, 15, 33, 30, 0);
+
+      const result = validator({ value, customArgs: { date } });
+
+      expect(result).toEqual({
+        succeeded: true,
+        message: '',
+        type: 'PREVIOUS_DATE',
+      });
+    });
+
     it('should throw an error when it feeds value equals undefined', () => {
-      // Arrange
-      const value = void 0;
-      const validate = value => validator({ value });
-      // Assert
-      expect(() => validate(value)).toThrow(TypeError);
-      expect(() => validate(value)).toThrowError(
+      const value = undefined;
+      const validatorArgs = { value };
+
+      expect(() => validator(validatorArgs)).toThrow(TypeError);
+      expect(() => validator(validatorArgs)).toThrowError(
         'Value must be a valid Date object'
       );
     });
 
     it('should throw an error when it feeds value equals null', () => {
-      // Arrange
       const value = null;
-      const validate = value => validator({ value });
-      // Assert
-      expect(() => validate(value)).toThrow(TypeError);
-      expect(() => validate(value)).toThrowError(
+      const validatorArgs = { value };
+
+      expect(() => validator(validatorArgs)).toThrow(TypeError);
+      expect(() => validator(validatorArgs)).toThrowError(
         'Value must be a valid Date object'
       );
     });
 
     it('should throw an error when it feeds value equals empty string', () => {
-      // Arrange
       const value = '';
-      const validate = value => validator({ value });
-      // Assert
-      expect(() => validate(value)).toThrow(TypeError);
-      expect(() => validate(value)).toThrowError(
+      const validatorArgs = { value };
+
+      expect(() => validator(validatorArgs)).toThrow(TypeError);
+      expect(() => validator(validatorArgs)).toThrowError(
         'Value must be a valid Date object'
       );
     });
-  });
 
-  it('should return succeeded validation when value equals Date.now()', () => {
-    // Arrange
-    const value = Date.now();
+    it('should overwrite default message when it feeds value and message', () => {
+      const value = new Date(2020, 11, 24, 10, 33, 30, 0);
+      const message = 'other message';
 
-    // Act
-    const result = validator({ value });
+      const result = validator({ value, message });
 
-    // Assert
-    expect(result).toEqual({
-      succeeded: true,
-      message: '',
-      type: 'PREVIOUS_DATE',
+      expect(result).toEqual({
+        succeeded: false,
+        message: 'other message',
+        type: 'PREVIOUS_DATE',
+      });
+    });
+
+    it('should overwrite default message when it feeds value and calls to setErrorMessage', () => {
+      const value = new Date(2020, 11, 24, 10, 33, 30, 0);
+      setErrorMessage('other message');
+
+      const result = validator({ value });
+
+      expect(result).toEqual({
+        succeeded: false,
+        message: 'other message',
+        type: 'PREVIOUS_DATE',
+      });
     });
   });
 
-  it('should overwrite default message when it feeds value and message', () => {
-    // Arrange
-    const value = Date.now();
-    const message = 'other message';
+  describe('CustomParams boundaries ', () => {
+    it("Should throw an error if date param isn't a valid Date object", () => {
+      const value = new Date(2018, 11, 24, 10, 33, 30, 0);
+      const date = 'date';
+      const validatorArgs = { value, customArgs: { date } };
 
-    // Act
-    const result = validator({ value, message });
-
-    // Assert
-    expect(result).toEqual({
-      succeeded: false,
-      message: 'other message',
-      type: 'PREVIOUS_DATE',
-    });
-  });
-
-  it('should overwrite default message when it feeds value and calls to setErrorMessage', () => {
-    // Arrange
-    const value = Date.now();
-
-    setErrorMessage('other message');
-
-    // Act
-    const result = validator({ value });
-
-    // Assert
-    expect(result).toEqual({
-      succeeded: false,
-      message: 'other message',
-      type: 'PREVIOUS_DATE',
+      expect(() => validator(validatorArgs)).toThrow(TypeError);
+      expect(() => validator(validatorArgs)).toThrowError(
+        'Value must be a valid Date object'
+      );
     });
   });
 });
