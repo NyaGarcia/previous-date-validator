@@ -83,17 +83,4 @@ describe('fonk-previous-date-validator specs', () => {
       });
     });
   });
-
-  describe('CustomParams boundaries ', () => {
-    it("Should throw an error if date param isn't a valid Date object", () => {
-      const value = new Date(2018, 11, 24, 10, 33, 30, 0);
-      const date = 'date';
-      const validatorArgs = { value, customArgs: { date } };
-
-      expect(() => validator(validatorArgs)).toThrow(TypeError);
-      expect(() => validator(validatorArgs)).toThrowError(
-        'Value must be a valid Date object'
-      );
-    });
-  });
 });
