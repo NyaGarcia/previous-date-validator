@@ -3,7 +3,6 @@ import {
   parseMessageWithCustomArgs,
 } from '@lemoncode/fonk';
 
-// TODO: Add validator type
 const VALIDATOR_TYPE = 'PREVIOUS_DATE';
 
 export interface CustomArgs {
@@ -21,7 +20,7 @@ export const setErrorMessage = message => (defaultMessage = message);
 
 const isDefined = value => value !== void 0 && value !== null && value !== '';
 
-export const validator: FieldValidationFunctionSync = ({
+export const validator: FieldValidationFunctionSync<CustomArgs> = ({
   value,
   message = defaultMessage,
   customArgs = DEFAULT_PARAMS,
